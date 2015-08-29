@@ -42,10 +42,40 @@ def process_query(query,stem=True):
 	return stemmed
 
 
+
+def text2int(textnum, numwords={}):
+	keywords = {}
+	keywords["zero"] = "0"
+	keywords["one"] = "1"
+	keywords["two"] = "2"
+	keywords["three"] = "4"
+	keywords["four"] = "4"
+	keywords["five"] = "5"
+	keywords["six"] = "6"
+	keywords["couple"] = "2"
+	keywords["century"] = "100"
+	keywords["ton"] = "100"
+	keywords["double"] = "2"
+	return keywords[textnum]
+
 def append_query(query):
-		q = process_query(query)
-		
+	q = process_query(query,False)
+	for word in q:
+		try:
+			q.append(text2int(word))
+		except:
+			if word=="boundary":
+				if "4" not in q:
+					q.append("4")
+				if "6" not in q:
+					q.append("6")
+	return q
 
 
-documents = derive_vocabulary("Linear.txt")
-print documents
+
+if __name__ == '__main__':
+	documents = None
+	with open("documents.pkl", 'rb') as input:
+		documents = pickle.load(input)
+	query = raw_input("Enter Query :")
+	print append_query(query)
