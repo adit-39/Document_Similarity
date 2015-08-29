@@ -26,7 +26,7 @@ def stopword(word_list):
     return filtered_words
 
 
-def process_query(query,stem=True):
+def process_query(query,stem=False):
 	st = LancasterStemmer()
 	re_tokenizer = RegexpTokenizer('\w+')
 	words = re_tokenizer.tokenize(query)
@@ -59,7 +59,7 @@ def text2int(textnum, numwords={}):
 	return keywords[textnum]
 
 def append_query(query):
-	q = process_query(query,False)
+	q = process_query(query)
 	for word in q:
 		try:
 			q.append(text2int(word))
