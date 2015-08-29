@@ -26,7 +26,7 @@ def stopword(word_list):
     return filtered_words
 
 
-def process_query(query,stem=False):
+def process_query(query,stem=True):
 	st = LancasterStemmer()
 	re_tokenizer = RegexpTokenizer('\w+')
 	words = re_tokenizer.tokenize(query)
@@ -44,25 +44,13 @@ def process_query(query,stem=False):
 
 
 def text2int(textnum, numwords={}):
-	keywords = {}
-	keywords["zero"] = "0"
-	keywords["one"] = "1"
-	keywords["two"] = "2"
-	keywords["three"] = "4"
-	keywords["four"] = "4"
-	keywords["five"] = "5"
-	keywords["six"] = "6"
-	keywords["couple"] = "2"
-	keywords["century"] = "100"
-	keywords["ton"] = "100"
-	keywords["double"] = "2"
 	return keywords[textnum]
 
 def append_query(query):
-	q = process_query(query)
+	q = process_query(query,False)
 	for word in q:
 		try:
-			q.append(text2int(word))
+			q.append(text2int(word)[0])
 		except:
 			if word=="boundary":
 				if "4" not in q:
@@ -72,8 +60,21 @@ def append_query(query):
 	return q
 
 
-
 if __name__ == '__main__':
+	keywords = {}
+	keywords["zero"] = ["0","zero"]
+	keywords["one"] = ["1","one"]
+	keywords["two"] = ["2","two","couple","double"]
+	keywords["three"] = ["3","three"]
+	keywords["four"] = ["4","four","boundary"]
+	keywords["five"] = ["5","five"]
+	keywords["six"] = ["6","six","boundary"]
+	keywords["couple"] = ["2","two","couple","double"]
+	keywords["century"] = ["100","hundred","century","ton"]
+	keywords["ton"] = ["100","hundred","century","ton"]
+	keywords["double"] = ["2","two","couple","double"]
+	with open('lookup.pkl', 'wb') as output:
+		pickle.dump(keywords, output, pickle.HIGHEST_PROTOCOL)
 	documents = None
 	with open("documents.pkl", 'rb') as input:
 		documents = pickle.load(input)
